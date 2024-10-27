@@ -10,8 +10,11 @@ namespace Moise_Hanna_Lab2.Models
             public string FirstName { get; set; } // Prenumele autorului
             public string LastName { get; set; } // Numele autorului
 
-            // Proprietatea de navigare pentru cărți
-            public ICollection<Book> Books { get; set; }
-            public string FullName => $"{FirstName} {LastName}";
+        [Display(Name = "Full Name")]
+        public string FullName => FirstName + " " + LastName;
+
+        // Proprietatea de navigare pentru cărți
+        public ICollection<Book>? Books { get; set; }
+            
     }
 }

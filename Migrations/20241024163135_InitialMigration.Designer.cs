@@ -12,8 +12,8 @@ using Moise_Hanna_Lab2.Data;
 namespace Moise_Hanna_Lab2.Migrations
 {
     [DbContext(typeof(Moise_Hanna_Lab2Context))]
-    [Migration("20241019122203_Author")]
-    partial class Author
+    [Migration("20241024163135_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
