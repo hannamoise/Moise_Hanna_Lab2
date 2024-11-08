@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Moise_Hanna_Lab2.Data;
 using Moise_Hanna_Lab2.Models;
+using Moise_Hanna_Lab2.Models.ViewModels.CategoryIndexData;
 
 namespace Moise_Hanna_Lab2.Pages.Categories
 {
@@ -19,11 +20,37 @@ namespace Moise_Hanna_Lab2.Pages.Categories
             _context = context;
         }
 
-        public IList<Category> Category { get;set; } = default!;
+        public IList<Category> Category { get; set; } = default!;
+        public CategoryIndexData CategoryData { get; set; }
+        public int CategoryID { get; set; }
+        public int BookID { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id, int? bookID)
         {
-            Category = await _context.Category.ToListAsync();
+            CategoryData = new CategoryIndexData();
+
+            var categoriesQuery = _context.Category
+                .Include(c => c.BookCategories)
+                .ThenInclude(bc => bc.Book)
+                .ThenInclude(b => b.Author)
+                .OrderBy(c => c.CategoryName);
+            CategoryData.Categories = await categoriesQuery.ToListAsync();
+
+
+            if (id.HasValue)
+            {
+                CategoryID = id.Value;
+
+
+                var selectedCategory = CategoryData.Categories
+                    .FirstOrDefault(c => c.ID == id.Value);
+
+
+                CategoryData.Books = selectedCategory?.BookCategories
+                    .Select(bc => bc.Book)
+                    .ToList();
+            }
+
         }
     }
 }

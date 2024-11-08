@@ -6,14 +6,18 @@ namespace Moise_Hanna_Lab2.Models
 {
     public class Author
     { 
-            public int ID { get; set; } // ID-ul autorului
-            public string FirstName { get; set; } // Prenumele autorului
-            public string LastName { get; set; } // Numele autorului
+            public int ID { get; set; } 
+            public string FirstName { get; set; } 
+            public string LastName { get; set; } 
 
         [Display(Name = "Full Name")]
-        public string FullName => FirstName + " " + LastName;
-
-        // Proprietatea de navigare pentru cărți
+        public string FullName
+        {
+            get
+            {
+              return  FirstName + " " + LastName;
+            }
+        }
         public ICollection<Book>? Books { get; set; }
             
     }
