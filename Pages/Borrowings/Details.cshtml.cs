@@ -30,14 +30,12 @@ namespace Moise_Hanna_Lab2.Pages.Borrowings
 
             var borrowing = await _context.Borrowing.FirstOrDefaultAsync(m => m.ID == id);
             if (borrowing == null)
-            {
-                return NotFound();
-            }
-            else
-            {
+            { 
                 Borrowing = borrowing;
+                _context.Borrowing.Remove(Borrowing);
+                await _context.SaveChangesAsync();
             }
-            return Page();
+            return RedirectToPage("./Index");
         }
     }
 }
