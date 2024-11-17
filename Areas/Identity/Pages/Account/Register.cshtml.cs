@@ -111,8 +111,6 @@ namespace Moise_Hanna_Lab2.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
-
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -157,10 +155,7 @@ namespace Moise_Hanna_Lab2.Areas.Identity.Pages.Account
             await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
            
             $"Please confirm your account by <a href = '{HtmlEncoder.Default.Encode(callbackUrl)}' > clicking here </ a >.");
-
-
-             if
-(_userManager.Options.SignIn.RequireConfirmedAccount)
+             if(_userManager.Options.SignIn.RequireConfirmedAccount)
             {
                 return RedirectToPage("RegisterConfirmation", new
                 {
@@ -191,6 +186,7 @@ namespace Moise_Hanna_Lab2.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    var role = await _userManager.AddToRoleAsync(user, "User");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -218,11 +214,9 @@ namespace Moise_Hanna_Lab2.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
         private IdentityUser CreateUser()
         {
             try
@@ -236,7 +230,6 @@ namespace Moise_Hanna_Lab2.Areas.Identity.Pages.Account
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
-
         private IUserEmailStore<IdentityUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)

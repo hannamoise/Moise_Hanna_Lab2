@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using Moise_Hanna_Lab2.Models;
 
 namespace Moise_Hanna_Lab2.Pages.Books
 {
+    [Authorize(Roles = "Admin")]
     public class EditModel : BookCategoriesPageModel
     {
         private readonly Moise_Hanna_Lab2.Data.Moise_Hanna_Lab2Context _context;
@@ -37,12 +39,19 @@ namespace Moise_Hanna_Lab2.Pages.Books
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
+            
             if (book == null)
             {
                 return NotFound();
             }
             Book = book;
             PopulateAssignedCategoryData(_context, Book);
+
+            var authorList = _context.Author.Select(x => new
+            {
+                x.ID,
+                FullName = x.LastName + " " + x.FirstName
+            });
             ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "ID", "PublisherName");
             ViewData["AuthorID"] = new SelectList(_context.Set<Author>(), "ID", "FullName");
             //ViewData["AuthorID"] = new SelectList(_context.Set<Author>(), "ID", "FirstName"); 
